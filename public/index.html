@@ -1,10 +1,23 @@
 <!doctype html>
 <html>
 <head>
-    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <title>Imageboard</title>
 </head>
 <body>
-    <script src="/js/vue.js"></script>
-    <script src="/js/axios.min.js"></script>
+    <div id="main">
+        <h1 v-bind:class="className">{{heading}}</h1>
+        <input v-model="greetee">
+        <p>Hello, {{greetee}}!</p>
+        <a :href="url">Click</a>
+        <!-- v-if = if statement -->
+        <ul v-if="candy">
+            <!-- v-for = loop -->
+            <li v-for="c in candy">{{c}}</li>
+        </ul>
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
