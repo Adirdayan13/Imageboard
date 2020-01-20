@@ -21,31 +21,28 @@ header {
 .logo-header {
     position: absolute;
     height: 50px;
-    top: 1%;
+    top: 5px;
     left: 1%;
 }
 
 .images {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .image-div {
     border: 1px solid black;
     align-items: center;
     text-align: center;
-    display: flex;
-    flex-direction: column;
     margin: 3%;
-    width: 33%;
+    width: 300px;
+    padding-bottom: 5px;
 }
 
 .image {
-    display: flex;
-    flex-direction: column;
     width: 98%;
     height: 90%;
-    justify-content: center;
     padding-top: 3px;
 }
 
