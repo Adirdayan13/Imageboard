@@ -2,22 +2,25 @@
 <html>
 <head>
     <link rel="stylesheet" href="style.css">
-    <title>Imageboard</title>
+    <title>My Imageboard</title>
+    <header>
+        <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/logo.png" class="logo-header"></a></div>
+    </header>
 </head>
 <body>
     <div id="main">
-        <h1 v-bind:class="className">{{heading}}</h1>
-        <input v-model="greetee">
-        <p>Hello, {{greetee}}!</p>
-        <a :href="url">Click</a>
-        <!-- v-if = if statement -->
-        <ul v-if="candy">
-            <!-- v-for = loop -->
-            <li v-for="c in candy">{{c}}</li>
-        </ul>
+        <h1>{{heading}}</h1>
+        <h2>{{latest}}</h2>
+        <div class="images" v-if="images">
+            <div class="image-div" v-for="i in images" >
+                <img :src="i.url" class="image">
+                <p class="image-title">{{i.title}}</p>
+            </div>
+
+        </div>
     </div>
-    <script src="js/vue.js"></script>
-    <script src="js/axios.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/script2.js"></script>
 </body>
 </html>
