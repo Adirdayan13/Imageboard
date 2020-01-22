@@ -2,11 +2,13 @@
     new Vue({
         el: "#main",
         data: {
-            heading: "Welcome!",
-            greetee: "Kitty",
-            className: "pretty",
-            url: "https://spiced.academy",
-            candy: null
+            heading: "Image Board",
+            latest: "Upload picture and see it appear on screen",
+            images: null,
+            title: "",
+            description: "",
+            username: "",
+            file: null
         },
         created: function() {
             console.log("created");
@@ -15,29 +17,39 @@
             console.log("mounted");
             var vueInstance = this;
             axios
-                .get("/candy")
+                .get("/images")
                 .then(function(res) {
-                    console.log(res.data);
-                    vueInstance.candy = res.data;
+                    vueInstance.images = res.data;
                 })
                 .catch(function(err) {
-                    console.log("error in axios get :", err);
+                    console.log("error in axios get images: ", err);
                 });
         },
-        updated: function() {
-            console.log("updated", this.greetee);
-        },
         methods: {
-            sayHello: function() {
-                console.log("Hello, " + this.greetee);
+            handleClick: function(e) {
+                e.preventDefault();
+                console.log("this: ", this);
+                // we need to use FormData to send file to the server
+                var formData = new FormData();
+                formData.append("title", this.title);
+                formData.append("description", this.description);
+                formData.append("username", this.username);
+                formData.append("file", this.file);
+                var image = this;
+                axios
+                    .post("/upload", formData)
+                    .then(function(res) {
+                        console.log("response from POST /upload: ", res);
+                        image.images.unshift(res.data);
+                    })
+                    .catch(function(err) {
+                        console.log("error in POST /upload: ", err);
+                    });
             },
-            changeName: function(name) {
-                for (var i = 0; i < this.candy.length; i++) {
-                    if (this.candy[i].name == name) {
-                        this.candy[i].name = "baci";
-                    }
-                }
-                this.sayHello();
+            handleChange: function(e) {
+                console.log("handleChange is running");
+                console.log("file: ", e.target.files[0]);
+                this.file = e.target.files[0];
             }
         }
     });
