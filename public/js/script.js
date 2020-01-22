@@ -53,6 +53,7 @@
                 this.$emit("close", this.count);
             },
             addComment: function() {
+                var vueInstance = this;
                 console.log("comment !");
                 console.log("id: ", this.id);
                 axios
@@ -62,6 +63,7 @@
                         comment: this.comment
                     })
                     .then(function(results) {
+                        vueInstance.comments.push(results.data);
                         console.log("results from POST comment: ", results);
                     })
                     .catch(function(err) {
