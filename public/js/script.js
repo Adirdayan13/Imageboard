@@ -17,15 +17,15 @@
             console.log("component mounted: ");
             console.log("my postTitle: ", this.postTitle);
             console.log("id: ", this.id);
-            var imageThis = this;
+            var vueInstance = this;
 
             axios
                 .get("/selectedimage/" + this.id)
                 .then(function(res) {
-                    imageThis.username = res.data.username;
-                    imageThis.title = res.data.title;
-                    imageThis.description = res.data.description;
-                    imageThis.url = res.data.url;
+                    vueInstance.username = res.data.username;
+                    vueInstance.title = res.data.title;
+                    vueInstance.description = res.data.description;
+                    vueInstance.url = res.data.url;
                 })
                 .catch(function(err) {
                     console.log("error in axios get image: ", err);
@@ -38,9 +38,9 @@
                         "resultsssss from axios GET comment: ",
                         results.data
                     );
-                    console.log("this.comments: ", imageThis.comments);
+                    console.log("this.comments: ", vueInstance.comments);
                     for (var i = 0; i < results.data.length; i++) {
-                        imageThis.comments.push(results.data[i]);
+                        vueInstance.comments.push(results.data[i]);
                     }
                 })
                 .catch(function(err) {
