@@ -1,21 +1,71 @@
 const express = require("express");
 const app = express();
 const db = require("./db");
+const s3 = require("./s3");
+const { s3Url } = require("./config");
 
 app.use(express.static("./public"));
 
+const multer = require("multer");
+const uidSafe = require("uid-safe");
+const path = require("path");
+
+//////// BOILERPLATE mode for image upload //////
+/////// DO NOT TOUCH //////
+const diskStorage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    // give unique name to each image - random 24 char name
+    filename: function(req, file, callback) {
+        uidSafe(24).then(function(uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    }
+});
+
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152
+    }
+});
+/////////// DO NOT TOUCH ///////////
+
 app.use(express.json());
 
-app.get("/candy", (req, res) => {
-    // res.json([
-    //     { name: "maltesers" },
-    //     { name: "happy cherries" },
-    //     { name: "milka" }
-    // ]);
-    // console.log("res: ", res);
-    db.getImages().then(function(results) {
-        res.json(results.rows);
-    });
+app.get("/images", (req, res) => {
+    db.getImages()
+        .then(function(results) {
+            res.json(results.rows);
+        })
+        .catch(err => {
+            console.log("error in GET /images :", err);
+        });
+});
+
+app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
+    console.log("file :", req.file);
+    console.log("input: ", req.body);
+    let username = req.body.username;
+    let description = req.body.description;
+    let title = req.body.title;
+    //insert a new row into the db for the images
+    const imageUrl = s3Url + req.file.filename;
+    if (req.file) {
+        db.addImage(imageUrl, username, title, description)
+            .then(function(results) {
+                res.json(results.rows[0]);
+                console.log("results from POST /upload: ", results.rows[0]);
+            })
+            .catch(function(err) {
+                console.log("error from POST upload :", err);
+                res.sendStatus(500);
+            });
+    } else {
+        res.sendStatus(500);
+        false;
+    }
 });
 
 app.listen(8080, () => console.log(`808(0) listening.`));

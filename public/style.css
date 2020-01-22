@@ -5,9 +5,7 @@ html {
 
 body {
     margin: 0;
-    background-color: darkgray;
-    /* border: 10px solid white;
-    border-radius: 2%; */
+    background-color: ghostwhite;
 }
 
 header {
@@ -18,6 +16,25 @@ header {
     color: white;
 }
 
+input[name="title"],
+input[name="description"],
+input[name="username"] {
+    box-shadow: none;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+
+#main {
+    justify-content: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
 .logo-header {
     position: absolute;
     height: 50px;
@@ -25,19 +42,27 @@ header {
     left: 1%;
 }
 
-.images {
+.heading {
+    text-align: center;
+    font-size: 50px;
+}
+
+.all-images {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .image-div {
-    border: 1px solid black;
+    border: 2px solid black;
+    border-radius: 10px;
     align-items: center;
     text-align: center;
-    margin: 3%;
+    margin: 1%;
     width: 300px;
-    padding-bottom: 5px;
+    height: 300px;
+    padding: 25px;
+    background-color: papayawhip;
 }
 
 .image {
@@ -48,4 +73,20 @@ header {
 
 .image-title {
     margin: 5px;
+}
+
+.form {
+    width: 60%;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    margin-left: 20%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        background-color: #fed39f;
+    }
 }
