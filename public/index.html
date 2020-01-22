@@ -9,6 +9,16 @@
 </head>
 <body>
     <div id="main">
+
+        <first-component
+        v-if="selectedImage"
+        post-title="My amazing article"
+        :id="selectedImage"
+        @close="closeMe"
+        ></first-component>
+        <!-- <first-component></first-component> -->
+        <!-- <p class="fruit" v-for="fruit in fruits" @click="selectedFruit = fruit.id">{{fruit.title}}</p> -->
+
         <div class="titles">
             <div class="">
                 <h1 class="heading">{{heading}}</h1>
@@ -27,12 +37,41 @@
             </form>
         </div>
         <div class="all-images" v-if="images">
-            <div class="image-div" v-for="i in images" >
-                <img :src="i.url" class="image">
+            <div class="image-div" v-for="i in images">
+                <img :src="i.url" class="image" @click="imageclick(i.id)">
                 <p class="image-title">{{i.title}}</p>
             </div>
         </div>
+        <!-- <first-component></first-component> -->
     </div>
+
+    <script type="text/x-template" id="template">
+        <div class="component">
+            <p @click="closeModal" class="x">X</p>
+            <div class="description">
+                <p>Title: {{title}}</p>
+                <p>Description: {{description}}</p>
+                <p>User name: {{username}}</p>
+            </div>
+            <img :src='url' class="picture-clicked">
+            <div class="comments">
+                <span>Comment:</span>
+                <input type="text" v-model="comment" name="comment" placeholder="Your comment">
+                <br><br>
+                <span>User name:</span>
+                <input type="text" v-model="usernameComment" name="usernameComment" placeholder="Your user name">
+                <br><br>
+                <button @click="addComment()">Submit</button>
+            </div>
+            <div class="comments-get" v-if="comments">
+                <p v-for="c in comments">User name: {{c.username}}
+                <br>
+                Comment: {{c.comment}}</p>
+                <!-- <p v-for="c in comments">Comment: {{c.comment}}</p> -->
+            </div>
+        </div>
+    </script>
+
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js"></script>

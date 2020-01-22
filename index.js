@@ -34,7 +34,7 @@ const uploader = multer({
 
 app.use(express.json());
 
-app.get("/images", (req, res) => {
+app.get("/images", function(req, res) {
     db.getImages()
         .then(function(results) {
             res.json(results.rows);
@@ -42,6 +42,55 @@ app.get("/images", (req, res) => {
         .catch(err => {
             console.log("error in GET /images :", err);
         });
+});
+
+app.get("/comment/:id", function(req, res) {
+    console.log("GET comment");
+    console.log("req.params.id: ", req.params.id);
+    let imageId = req.params.id;
+    db.getComment(imageId)
+        .then(function(results) {
+            console.log("results from GET comment: ", results.rows);
+            console.log("req from GET comment: ", req.body);
+            // res.json(req.body.username, req.body.comment);
+            res.json(results.rows);
+        })
+        .catch(function(err) {
+            console.log("error from GET comment: ", err);
+        });
+});
+
+app.post("/comment", function(req, res) {
+    let userId = req.body.id;
+    let username = req.body.username;
+    let comment = req.body.comment;
+    console.log("POST comment");
+    console.log("req.body: ", req.body);
+    db.addComment(userId, username, comment)
+        .then(function(results) {
+            console.log(
+                "results from addComment POST /comment: ",
+                results.rows[0]
+            );
+            res.json(results.rows[0]);
+        })
+        .catch(function(err) {
+            console.log("error in addComment POST /comment: ", err);
+        });
+});
+
+app.get("/selectedimage/:id", function(req, res) {
+    console.log("req.body: ", req.params.id);
+    console.log("GET selectedimage");
+    db.getImage(req.params.id)
+        .then(function(results) {
+            console.log(results.rows[0]);
+            res.json(results.rows[0]);
+        })
+        .catch(err => {
+            console.log("error in getImage GET /selectedimage/:id", err);
+        });
+    // console.log("res from GET selectedimage: ", res);
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
