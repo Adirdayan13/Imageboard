@@ -14,40 +14,52 @@
             };
         },
         mounted: function() {
-            console.log("component mounted: ");
-            console.log("my postTitle: ", this.postTitle);
-            console.log("id: ", this.id);
-            var vueInstance = this;
+            this.mounted();
+        },
+        watch: {
+            id: function() {
+                console.log("we are in watch !");
+                this.mounted();
 
-            axios
-                .get("/selectedimage/" + this.id)
-                .then(function(res) {
-                    vueInstance.username = res.data.username;
-                    vueInstance.title = res.data.title;
-                    vueInstance.description = res.data.description;
-                    vueInstance.url = res.data.url;
-                })
-                .catch(function(err) {
-                    console.log("error in axios get image: ", err);
-                });
-
-            axios
-                .get("/comment/" + this.id)
-                .then(function(results) {
-                    console.log(
-                        "resultsssss from axios GET comment: ",
-                        results.data
-                    );
-                    console.log("this.comments: ", vueInstance.comments);
-                    for (var i = 0; i < results.data.length; i++) {
-                        vueInstance.comments.push(results.data[i]);
-                    }
-                })
-                .catch(function(err) {
-                    console.log("error from GET comment: ", err);
-                });
+                // another problem we need to deal with is if the user try to go
+                // to an image that dosent exist
+                // we want to look at the response from the server, if the response
+                // is certain think close the model
+            }
         },
         methods: {
+            mounted: function() {
+                var vueInstance = this;
+                axios
+                    .get("/selectedimage/" + this.id)
+                    .then(function(res) {
+                        console.log("results from selectedImage: ", res.data);
+                        vueInstance.username = res.data.username;
+                        vueInstance.title = res.data.title;
+                        vueInstance.description = res.data.description;
+                        vueInstance.url = res.data.url;
+                        console.log("res.data: ", res.data);
+                    })
+                    .catch(function(err) {
+                        console.log("error in axios get image: ", err);
+                    });
+
+                axios
+                    .get("/comment/" + this.id)
+                    .then(function(results) {
+                        console.log(
+                            "resultsssss from axios GET comment: ",
+                            results.data
+                        );
+                        vueInstance.comments = results.data;
+                        // for (var i = 0; i < results.data.length; i++) {
+                        //     vueInstance.comments.push(results.data[i]);
+                        // }
+                    })
+                    .catch(function(err) {
+                        console.log("error from GET comment: ", err);
+                    });
+            },
             closeModal: function() {
                 console.log("closeModal clicked worked");
                 this.$emit("close", this.count);
@@ -76,15 +88,15 @@
     new Vue({
         el: "#main",
         data: {
-            selectedFruit: null,
-            selectedImage: null,
+            selectedImage: location.hash.slice(1),
             heading: "Image Board",
-            latest: "Upload picture and see it appear on screen",
+            latest: "Share your favourite picture",
             images: null,
             title: "",
             description: "",
             username: "",
-            file: null
+            file: null,
+            lastId: null
         },
         created: function() {
             console.log("created");
@@ -92,10 +104,16 @@
         mounted: function() {
             console.log("mounted");
             var vueInstance = this;
+            addEventListener("hashchange", function() {
+                vueInstance.selectedImage = location.hash.slice(1);
+                console.log("########hash changed !");
+            });
             axios
                 .get("/images")
                 .then(function(res) {
                     vueInstance.images = res.data;
+                    vueInstance.lastId = res.data[res.data.length - 1].id;
+                    console.log("lastId: ", vueInstance.lastId);
                 })
                 .catch(function(err) {
                     console.log("error in axios get images: ", err);
@@ -111,12 +129,12 @@
                 formData.append("description", this.description);
                 formData.append("username", this.username);
                 formData.append("file", this.file);
-                var image = this;
+                var vueInstance = this;
                 axios
                     .post("/upload", formData)
                     .then(function(res) {
                         console.log("response from POST /upload: ", res);
-                        image.images.unshift(res.data);
+                        vueInstance.images.unshift(res.data);
                     })
                     .catch(function(err) {
                         console.log("error in POST /upload: ", err);
@@ -129,6 +147,8 @@
             },
             closeMe: function(count) {
                 this.selectedImage = null;
+                location.hash = "";
+                // history.replaceState(null, null, " ");
                 console.log("i need to close the modal", count);
                 console.log("this.selectedImage: ", this.selectedImage);
             },
@@ -136,6 +156,34 @@
                 this.selectedImage = id;
                 console.log("id: ", id);
                 console.log("this.selectedImage: ", this.selectedImage);
+            },
+            showmore: function(e) {
+                var vueInstance = this;
+                console.log("this.lastId: ", this.lastId);
+                e.preventDefault();
+                axios
+                    .get("/nextImages/" + this.lastId)
+                    .then(function(results) {
+                        console.log(
+                            "lastId: ",
+                            results.data[results.data.length - 1].id
+                        );
+                        vueInstance.lastId =
+                            results.data[results.data.length - 1].id;
+                        for (var j = 0; j < results.data.length; j++) {
+                            vueInstance.images.push(results.data[j]);
+                            if (
+                                results.data[j].id == results.data[j].lowestId
+                            ) {
+                                document
+                                    .getElementById("showmore")
+                                    .classList.add("hidden");
+                            }
+                        }
+                    })
+                    .catch(function(err) {
+                        console.log("error in GET showmore: ", err);
+                    });
             }
         }
     });

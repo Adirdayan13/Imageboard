@@ -34,6 +34,18 @@ const uploader = multer({
 
 app.use(express.json());
 
+app.get("/nextImages/:id", function(req, res) {
+    let imageId = req.params.id;
+    db.getNextImages(imageId)
+        .then(function(results) {
+            console.log("results from GET nextImages: ", results.rows);
+            res.json(results.rows);
+        })
+        .catch(function(err) {
+            console.log("error from GET nextImages: ", err);
+        });
+});
+
 app.get("/images", function(req, res) {
     db.getImages()
         .then(function(results) {
@@ -81,10 +93,10 @@ app.post("/comment", function(req, res) {
 
 app.get("/selectedimage/:id", function(req, res) {
     console.log("req.body: ", req.params.id);
-    console.log("GET selectedimage");
+    // console.log("GET selectedimage");
     db.getImage(req.params.id)
         .then(function(results) {
-            console.log(results.rows[0]);
+            console.log("results from /selectedimage: ", results.rows[0]);
             res.json(results.rows[0]);
         })
         .catch(err => {

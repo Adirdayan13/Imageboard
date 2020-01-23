@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
     <title>My Imageboard</title>
     <header>
@@ -38,11 +39,14 @@
         </div>
         <div class="all-images" v-if="images">
             <div class="image-div" v-for="i in images">
-                <img :src="i.url" class="image" @click="imageclick(i.id)">
+                <a :href="'#' + i.id">
+                    <img :src="i.url" class="image">
+                </a>
                 <p class="image-title">{{i.title}}</p>
             </div>
         </div>
         <!-- <first-component></first-component> -->
+        <button id="showmore" @click="showmore">Show more</button>
     </div>
 
     <script type="text/x-template" id="template">
@@ -51,22 +55,25 @@
             <div class="description">
                 <p>Title: {{title}}</p>
                 <p>Description: {{description}}</p>
-                <p>User name: {{username}}</p>
             </div>
-            <img :src='url' class="picture-clicked">
+            <div class="image-clicked">
+                <img :src='url' class="picture-clicked">
+                <p class="upload-by">Uploaded by: {{username}}</p>
+            </div>
             <div class="comments">
-                <span>Comment:</span>
-                <input type="text" v-model="comment" name="comment" placeholder="Your comment">
-                <br><br>
                 <span>User name:</span>
                 <input type="text" v-model="usernameComment" name="usernameComment" placeholder="Your user name">
-                <br><br>
+                <span>Comment:</span>
+                <input type="text" v-model="comment" name="comment" placeholder="Your comment">
                 <button @click="addComment()">Submit</button>
             </div>
             <div class="comments-get" v-if="comments">
-                <p v-for="c in comments">User name: {{c.username}}
-                <br>
-                Comment: {{c.comment}}</p>
+                <span class="comments-title">Comments</span>
+                <p v-for="c in comments" class="username">
+                    <span class="username">{{c.username}}:</span>
+                    <span class="comment">{{c.comment}}</span>
+                    <!-- <span class="created-at">{{c.created_at}}</span> -->
+                </p>
                 <!-- <p v-for="c in comments">Comment: {{c.comment}}</p> -->
             </div>
         </div>

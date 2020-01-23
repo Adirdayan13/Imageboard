@@ -4,7 +4,7 @@ const db = spicedPg("postgres:postgres:postgres@localhost:5432/imageboard");
 const multer = require("multer");
 
 exports.getImages = function() {
-    return db.query(`SELECT * FROM images ORDER BY id DESC`);
+    return db.query(`SELECT * FROM images ORDER BY id DESC LIMIT 10`);
 };
 
 exports.addImage = function(url, username, title, description) {
@@ -17,6 +17,20 @@ exports.addImage = function(url, username, title, description) {
 
 exports.getImage = function(id) {
     return db.query(`SELECT * FROM images WHERE id = $1`, [id]);
+};
+
+exports.getNextImages = function(id) {
+    return db.query(
+        `SELECT *, (
+        SELECT id FROM images
+        ORDER BY id ASC
+        LIMIT 1)
+        AS "lowestId" FROM images
+        WHERE id < $1
+        ORDER BY id DESC
+        LIMIT 10;`,
+        [id]
+    );
 };
 
 exports.addComment = function(imageId, username, comment) {
