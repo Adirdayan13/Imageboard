@@ -3,10 +3,11 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
     <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
     <title>My Imageboard</title>
     <header>
-        <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/logo.png" class="logo-header"></a></div>
+        <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/synth.png" class="logo-header"></a></div>
     </header>
 </head>
 <body>
@@ -17,6 +18,7 @@
         post-title="My amazing article"
         :id="selectedImage"
         @close="closeMe"
+        @render="refresh"
         ></first-component>
         <!-- <first-component></first-component> -->
         <!-- <p class="fruit" v-for="fruit in fruits" @click="selectedFruit = fruit.id">{{fruit.title}}</p> -->
@@ -25,7 +27,7 @@
             <div class="">
                 <h1 class="heading">{{heading}}</h1>
             </div>
-            <div class="">
+            <div>
                 <h2 style="text-align:center; font-family: 'Indie Flower', cursive;">{{latest}}</h2>
             </div>
         </div>
@@ -42,6 +44,8 @@
                         <input @change="handleChange" type="file" name="file" accept="image/*">
                         <br>
                         <button @click="handleClick" class="submit-upload">Submit</button>
+                        <br>
+                        <p style="color:red; text-decoration:underline; margin-top:5px;">{{toobig}}<p>
                     </div>
                 <!-- </div> -->
             </form>
@@ -78,6 +82,10 @@
                 <input type="text" v-model="comment" class="comment-input" name="comment" placeholder="Your comment">
                 <br>
                 <button @click="addComment()" class="submit-comment">Submit</button>
+                <button class='delete-button' @click="deletePictureAndComments"> Delete image </button>
+                <button>Comments</button>
+
+                <br>
             </div>
             <div class="comments-get" v-if="comments">
                 <span class="comments-title">Comments</span>
