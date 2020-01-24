@@ -19,6 +19,11 @@
         watch: {
             id: function() {
                 console.log("we are in watch !");
+                console.log("this.id: ", this.id);
+                if (isNaN(this.id)) {
+                    console.log("we are in if");
+                    this.closeModal();
+                }
                 this.mounted();
 
                 // another problem we need to deal with is if the user try to go
@@ -30,6 +35,10 @@
         methods: {
             mounted: function() {
                 var vueInstance = this;
+                if (isNaN(vueInstance.id)) {
+                    console.log("we are in if");
+                    vueInstance.closeModal();
+                }
                 axios
                     .get("/selectedimage/" + this.id)
                     .then(function(res) {
@@ -38,7 +47,10 @@
                         vueInstance.title = res.data.title;
                         vueInstance.description = res.data.description;
                         vueInstance.url = res.data.url;
-                        console.log("res.data: ", res.data);
+                        console.log("res.data from mounted: ", res.data);
+                        if (res.data == "") {
+                            vueInstance.closeModal();
+                        }
                     })
                     .catch(function(err) {
                         console.log("error in axios get image: ", err);
@@ -106,7 +118,10 @@
             var vueInstance = this;
             addEventListener("hashchange", function() {
                 vueInstance.selectedImage = location.hash.slice(1);
-                console.log("########hash changed !");
+                console.log(
+                    "selectedimage from mounted: ",
+                    vueInstance.selectedImage
+                );
             });
             axios
                 .get("/images")
@@ -114,6 +129,10 @@
                     vueInstance.images = res.data;
                     vueInstance.lastId = res.data[res.data.length - 1].id;
                     console.log("lastId: ", vueInstance.lastId);
+                    // if (vueInstance.selectedimage == undefined) {
+                    //     console.log("we are in if GET /images");
+                    //     this.closeModal();
+                    // }
                 })
                 .catch(function(err) {
                     console.log("error in axios get images: ", err);

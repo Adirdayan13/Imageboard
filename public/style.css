@@ -49,6 +49,7 @@ input[name="username"] {
 .heading {
     text-align: center;
     font-size: 50px;
+    font-family: "Indie Flower", cursive;
 }
 
 .all-images {
@@ -97,7 +98,6 @@ input[name="username"] {
     bottom: 0;
     left: 10%;
     right: 10%;
-    /* opacity: 90%; */
     display: grid;
 }
 
@@ -108,6 +108,7 @@ input[name="username"] {
     color: black;
     font-weight: bold;
     top: 1%;
+    width: 40px;
 }
 
 .description {
@@ -119,10 +120,10 @@ input[name="username"] {
 }
 
 .comments {
-    top: 72%;
-    left: 40%;
+    top: 75%;
+    left: 45%;
     position: absolute;
-    transform: translate(-40%, -80%);
+    transform: translate(-45%, -75%);
 }
 
 .username {
@@ -131,8 +132,15 @@ input[name="username"] {
 }
 
 .upload-by {
-    margin-top: 160px;
-    margin-left: 480px;
+    position: absolute;
+    left: 75%;
+    top: 65%;
+}
+
+.submit-upload {
+    margin-top: 5px;
+    border: 1px solid black;
+    border-radius: 20px;
 }
 
 .comments-get {
@@ -166,6 +174,13 @@ input[name="username"] {
 #showmore {
     width: 100px;
     margin-left: 45%;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.submit-comment {
+    border: 1px solid black;
+    border-radius: 20px;
 }
 
 .hidden {
@@ -175,6 +190,10 @@ input[name="username"] {
 @media screen and (max-width: 480px) {
     body {
         background-color: orange;
+    }
+    .submit-button {
+        border-radius: 5px;
+        margin-left: 50px;
     }
     .component {
         background-color: #fed39f;
@@ -187,18 +206,19 @@ input[name="username"] {
         display: grid;
     }
     .picture-clicked {
-        width: 100%;
-        height: 60%;
         position: absolute;
+        width: 100%;
+        height: 55%;
         left: 50%;
-        top: 20%;
-        transform: translate(-50%, -20%);
+        top: 17%;
+        transform: translate(-50%, -17%);
     }
     .comments {
-        top: 76%;
-        left: 40%;
+        top: 75%;
+        left: 45%;
+        width: 40%;
         position: absolute;
-        transform: translate(-40%, -80%);
+        transform: translate(-45%, -75%);
     }
     .comments-title {
         padding-left: 33%;
@@ -209,9 +229,80 @@ input[name="username"] {
     .description {
         height: 46px;
         margin-top: 1%;
-        margin-right: 160px;
         font-size: 20px;
         border-bottom: 1px solid black;
         font-weight: bold;
+    }
+    .upload-by {
+        font-size: 12px;
+        position: absolute;
+        left: 1%;
+        top: 64%;
+    }
+}
+
+@media screen and (max-height: 380px) {
+    body {
+        background-color: orange;
+    }
+    .comments-get {
+        top: 76%;
+        left: 10%;
+        width: 80%;
+        height: 130px;
+        border: 1px solid black;
+        position: absolute;
+        text-align: left;
+        padding-left: 10px;
+        overflow: scroll;
+    }
+    .component {
+        background-color: #fed39f;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: grid;
+    }
+    .image-div {
+        border: 2px solid black;
+        border-radius: 10px;
+        align-items: center;
+        text-align: center;
+        margin: 1%;
+        width: 250px;
+        height: 250px;
+        padding: 25px;
+        background-color: papayawhip;
+    }
+    .upload-by {
+        position: absolute;
+        top: 71%;
+        left: 75%;
+    }
+    .comments {
+        top: 50%;
+        left: 10%;
+        display: flex;
+        position: absolute;
+        transform: translate(-40%, -80%);
+        flex-direction: column;
+    }
+    .comment-input {
+        margin-bottom: 10px;
+    }
+    .picture-clicked {
+        width: 50%;
+        height: 60%;
+        position: absolute;
+        left: 50%;
+        top: 28%;
+        transform: translate(-50%, -20%);
+    }
+    .submit-comment {
+        border: 1px solid black;
+        border-radius: 20px;
     }
 }

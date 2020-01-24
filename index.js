@@ -102,7 +102,6 @@ app.get("/selectedimage/:id", function(req, res) {
         .catch(err => {
             console.log("error in getImage GET /selectedimage/:id", err);
         });
-    // console.log("res from GET selectedimage: ", res);
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {

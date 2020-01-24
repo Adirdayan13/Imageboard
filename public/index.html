@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
     <title>My Imageboard</title>
     <header>
         <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/logo.png" class="logo-header"></a></div>
@@ -25,16 +26,24 @@
                 <h1 class="heading">{{heading}}</h1>
             </div>
             <div class="">
-                <h2 style="text-align:center;">{{latest}}</h2>
+                <h2 style="text-align:center; font-family: 'Indie Flower', cursive;">{{latest}}</h2>
             </div>
         </div>
         <div class="form">
             <form>
-                <input v-model='title' type="text" name="title" placeholder="Title">
-                <input v-model='description' type="text" name="description" placeholder="Description">
-                <input v-model='username' type="text" name="username" placeholder="User name">
-                <input @change="handleChange" type="file" name="file" accept="image/*">
-                <button @click="handleClick">Submit</button>
+                <!-- <div> -->
+                    <div>
+                        <input v-model='title' type="text" name="title" placeholder="Title">
+                        <input v-model='description' type="text" name="description" placeholder="Description">
+                        <input v-model='username' type="text" name="username" placeholder="User name">
+                    </div>
+                    <br>
+                    <div>
+                        <input @change="handleChange" type="file" name="file" accept="image/*">
+                        <br>
+                        <button @click="handleClick" class="submit-upload">Submit</button>
+                    </div>
+                <!-- </div> -->
             </form>
         </div>
         <div class="all-images" v-if="images">
@@ -51,7 +60,8 @@
 
     <script type="text/x-template" id="template">
         <div class="component">
-            <p @click="closeModal" class="x">X</p>
+            <!-- <p @click="closeModal" class="x">X</p> -->
+            <img src="x.gif" @click="closeModal" class="x">
             <div class="description">
                 <p>Title: {{title}}</p>
                 <p>Description: {{description}}</p>
@@ -63,9 +73,11 @@
             <div class="comments">
                 <span>User name:</span>
                 <input type="text" v-model="usernameComment" name="usernameComment" placeholder="Your user name">
+                <br>
                 <span>Comment:</span>
-                <input type="text" v-model="comment" name="comment" placeholder="Your comment">
-                <button @click="addComment()">Submit</button>
+                <input type="text" v-model="comment" class="comment-input" name="comment" placeholder="Your comment">
+                <br>
+                <button @click="addComment()" class="submit-comment">Submit</button>
             </div>
             <div class="comments-get" v-if="comments">
                 <span class="comments-title">Comments</span>
