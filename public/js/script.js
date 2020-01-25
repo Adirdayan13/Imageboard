@@ -93,6 +93,21 @@
                     .catch(function(err) {
                         console.log("error from POST /comment: ", err);
                     });
+            },
+            deletePictureAndComments: function(e) {
+                e.preventDefault();
+                var vueInstance = this;
+                console.log("we are in delete picture");
+                axios
+                    .get("/delete/" + this.id)
+                    .then(function(res) {
+                        console.log("res from delete :", res);
+                        vueInstance.$emit("renderagain", vueInstance.id);
+                        vueInstance.closeModal();
+                    })
+                    .catch(function(err) {
+                        console.log("error in delete: ", err);
+                    });
             }
         }
     });
@@ -101,8 +116,9 @@
         el: "#main",
         data: {
             selectedImage: location.hash.slice(1),
-            heading: "Image Board",
-            latest: "Share your favourite picture",
+            heading: "Synthagram",
+            latest: "Share your favourite synth picture",
+            toobig: null,
             images: null,
             title: "",
             description: "",
@@ -123,22 +139,25 @@
                     vueInstance.selectedImage
                 );
             });
-            axios
-                .get("/images")
-                .then(function(res) {
-                    vueInstance.images = res.data;
-                    vueInstance.lastId = res.data[res.data.length - 1].id;
-                    console.log("lastId: ", vueInstance.lastId);
-                    // if (vueInstance.selectedimage == undefined) {
-                    //     console.log("we are in if GET /images");
-                    //     this.closeModal();
-                    // }
-                })
-                .catch(function(err) {
-                    console.log("error in axios get images: ", err);
-                });
+            this.getSynths();
         },
         methods: {
+            refresh: function() {
+                this.getSynths();
+            },
+            getSynths: function() {
+                var vueInstance = this;
+                axios
+                    .get("/images")
+                    .then(function(res) {
+                        vueInstance.images = res.data;
+                        vueInstance.lastId = res.data[res.data.length - 1].id;
+                        console.log("lastId: ", vueInstance.lastId);
+                    })
+                    .catch(function(err) {
+                        console.log("error in axios get images: ", err);
+                    });
+            },
             handleClick: function(e) {
                 e.preventDefault();
                 console.log("this: ", this);
@@ -157,6 +176,8 @@
                     })
                     .catch(function(err) {
                         console.log("error in POST /upload: ", err);
+                        vueInstance.toobig =
+                            "File is too big max upload size is 2MB";
                     });
             },
             handleChange: function(e) {

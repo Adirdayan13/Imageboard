@@ -1,6 +1,7 @@
 html {
     margin: 0;
     box-sizing: border-box;
+    border: 5px solid dodgerblue;
 }
 
 body {
@@ -83,8 +84,8 @@ input[name="username"] {
 
 .form {
     width: 60%;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    border-top: 2px solid dodgerblue;
+    border-bottom: 2px solid dodgerblue;
     margin-left: 20%;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -92,13 +93,14 @@ input[name="username"] {
 }
 
 .component {
-    background-color: #fed39f;
     text-align: center;
     position: fixed;
     top: 0;
+    margin-top: 5px;
     bottom: 0;
     left: 10%;
     right: 10%;
+    background-image: linear-gradient(papayawhip, ghostwhite);
     display: grid;
 }
 
@@ -113,7 +115,7 @@ input[name="username"] {
 }
 
 .description {
-    height: 45px;
+    height: 51px;
     margin-top: 1%;
     font-size: 20px;
     border-bottom: 1px solid black;
@@ -122,10 +124,10 @@ input[name="username"] {
 }
 
 .comments {
-    top: 75%;
+    top: 77%;
     left: 45%;
     position: absolute;
-    transform: translate(-45%, -75%);
+    transform: translate(-45%, -77%);
 }
 
 .username {
@@ -143,6 +145,8 @@ input[name="username"] {
     margin-top: 5px;
     border: 1px solid black;
     border-radius: 20px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
 }
 
 .comments-get {
@@ -169,8 +173,8 @@ input[name="username"] {
     height: 60%;
     position: absolute;
     left: 50%;
-    top: 20%;
-    transform: translate(-50%, -20%);
+    top: 24%;
+    transform: translate(-50%, -24%);
 }
 
 #showmore {
@@ -180,6 +184,14 @@ input[name="username"] {
     border-radius: 20px;
     margin-bottom: 15px;
     margin-top: 10px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+#showmore:hover,
+.submit-upload:hover {
+    background-color: dodgerblue;
+    color: white;
 }
 
 .submit-comment {
@@ -192,8 +204,19 @@ input[name="username"] {
 }
 
 @media screen and (max-width: 480px) {
+    html {
+        margin: 0;
+        box-sizing: border-box;
+        border: 0;
+    }
     body {
         background-color: orange;
+    }
+    .logo-header {
+        position: absolute;
+        height: 50px;
+        top: 5px;
+        left: 2%;
     }
     .submit-button {
         border-radius: 5px;
@@ -246,6 +269,11 @@ input[name="username"] {
 }
 
 @media screen and (max-height: 380px) {
+    html {
+        margin: 0;
+        box-sizing: border-box;
+        border: 0;
+    }
     body {
         background-color: orange;
     }

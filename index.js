@@ -91,6 +91,17 @@ app.post("/comment", function(req, res) {
         });
 });
 
+app.get("/delete/:id", function(req, res) {
+    console.log("will be delete: ", req.params.id);
+    Promise.all([
+        db.deleteImage(req.params.id),
+        db.deleteComments(req.params.id)
+    ]).then(data => {
+        console.log("results from delete = ", data);
+        res.json(data);
+    });
+});
+
 app.get("/selectedimage/:id", function(req, res) {
     console.log("req.body: ", req.params.id);
     // console.log("GET selectedimage");

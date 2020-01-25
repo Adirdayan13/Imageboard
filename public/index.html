@@ -18,7 +18,7 @@
         post-title="My amazing article"
         :id="selectedImage"
         @close="closeMe"
-        @render="refresh"
+        @renderagain="refresh"
         ></first-component>
         <!-- <first-component></first-component> -->
         <!-- <p class="fruit" v-for="fruit in fruits" @click="selectedFruit = fruit.id">{{fruit.title}}</p> -->
@@ -73,6 +73,7 @@
             <div class="image-clicked">
                 <img :src='url' class="picture-clicked">
                 <p class="upload-by">Uploaded by: {{username}}</p>
+                <button @click="deletePictureAndComments" style="margin-left:70%;">Delete picture</button>
             </div>
             <div class="comments">
                 <span>User name:</span>
@@ -82,8 +83,8 @@
                 <input type="text" v-model="comment" class="comment-input" name="comment" placeholder="Your comment">
                 <br>
                 <button @click="addComment()" class="submit-comment">Submit</button>
-                <button class='delete-button' @click="deletePictureAndComments"> Delete image </button>
-                <button>Comments</button>
+                <!-- <button class='delete-button' @click="deletePictureAndComments"> Delete image </button> -->
+                <!-- <button>Comments</button> -->
 
                 <br>
             </div>
