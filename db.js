@@ -20,14 +20,16 @@ exports.getImage = function(id) {
 };
 
 exports.selectImage = function(id) {
-    return db.query(
-        `SELECT *,
+    return db
+        .query(
+            `SELECT *,
         (SELECT min(id) FROM images WHERE id>$1) AS "nextID",
         (SELECT max(id) FROM images WHERE id<$1) AS "previousID"
-        FROM getImages
+        FROM images
         WHERE id=$1`,
-        [id]
-    );
+            [id]
+        )
+        .then(({ rows }) => rows);
 };
 
 exports.getNextImages = function(id) {
@@ -64,6 +66,16 @@ exports.addCommentOfComment = function(comment_id, username, comment) {
         `INSERT INTO commentsofcomments (comment_id, username, comment) VALUES ($1, $2, $3) RETURNING *`,
         [comment_id, username, comment]
     );
+};
+
+exports.getCommentsOfComment = function(comment_id) {
+    return db
+        .query(
+            `
+        SELECT * FROM commentsofcomments WHERE comment_id = $1`,
+            [comment_id]
+        )
+        .then(({ rows }) => rows);
 };
 
 exports.deleteImage = function(id) {

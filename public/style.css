@@ -19,6 +19,7 @@ header {
 
 p {
     margin: 0;
+    font-family: "Acme", sans-serif;
 }
 
 input[name="title"],
@@ -123,6 +124,11 @@ input[name="username"] {
     color: deepskyblue;
 }
 
+.comment,
+.comments-title {
+    font-family: "Acme", sans-serif;
+}
+
 .comments {
     top: 77%;
     left: 45%;
@@ -133,12 +139,14 @@ input[name="username"] {
 .username {
     font-weight: bold;
     text-decoration: underline;
+    font-family: "Acme", sans-serif;
 }
 
 .upload-by {
     position: absolute;
-    left: 75%;
-    top: 65%;
+    left: 86%;
+    top: 94%;
+    width: 14%;
 }
 
 .submit-upload {
@@ -150,19 +158,20 @@ input[name="username"] {
 }
 
 .comments-get {
-    width: 80%;
+    width: 74%;
     height: 130px;
-    border: 1px solid black;
+    border: 3px solid deepskyblue;
     position: absolute;
     text-align: left;
     left: 10%;
     padding-left: 10px;
     top: 80%;
     overflow: scroll;
+    border-radius: 20px;
 }
 
 .comments-title {
-    padding-left: 40%;
+    padding-left: 43%;
     text-decoration: underline;
     font-weight: bold;
     color: red;
@@ -203,6 +212,52 @@ input[name="username"] {
     visibility: hidden;
 }
 
+#arrows-container {
+    margin-bottom: 50%;
+}
+
+.right-arrow {
+    position: absolute;
+    left: 78%;
+    top: 35%;
+}
+
+.left-arrow {
+    position: absolute;
+    left: 14%;
+    top: 35%;
+    transform: scale(-1, -1);
+}
+
+.delete-button {
+    border-radius: 13px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 78%;
+    top: 68%;
+    transform: translate(-78%, -68%);
+}
+
+.delete-button:hover {
+    color: white;
+    background-color: red;
+}
+
+.delete-image {
+    width: 30px;
+    margin: 0;
+    margin-left: -5px;
+}
+
+.too-big {
+    color: red;
+    text-decoration: underline;
+    margin-top: 5px;
+}
+
 @media screen and (max-width: 480px) {
     html {
         margin: 0;
@@ -211,6 +266,28 @@ input[name="username"] {
     }
     body {
         background-color: orange;
+    }
+    .right-arrow {
+        position: absolute;
+        left: 78%;
+        top: 62%;
+    }
+    .left-arrow {
+        position: absolute;
+        left: 1%;
+        top: 62%;
+        transform: scale(-1, -1);
+    }
+    .delete-button {
+        border-radius: 13px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        left: 98%;
+        top: 98%;
+        transform: translate(-98%, -98%);
     }
     .logo-header {
         position: absolute;
@@ -231,6 +308,7 @@ input[name="username"] {
         left: 0;
         right: 0;
         display: grid;
+        margin: 0;
     }
     .picture-clicked {
         position: absolute;
@@ -264,7 +342,7 @@ input[name="username"] {
         font-size: 12px;
         position: absolute;
         left: 1%;
-        top: 64%;
+        top: 2%;
     }
 }
 
@@ -277,12 +355,35 @@ input[name="username"] {
     body {
         background-color: orange;
     }
+    .delete-button {
+        border-radius: 13px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        left: 98%;
+        top: 97%;
+        transform: translate(-98%, -97%);
+    }
+    .left-arrow {
+        transform: scale(-1, -1);
+        position: absolute;
+        left: 13%;
+        top: 15%;
+        margin-left: 0;
+    }
+    .right-arrow {
+        position: absolute;
+        left: 75%;
+        top: 15%;
+    }
     .comments-get {
         top: 76%;
         left: 10%;
         width: 80%;
         height: 130px;
-        border: 1px solid black;
+        border: 2px solid deepskyblue;
         position: absolute;
         text-align: left;
         padding-left: 10px;
@@ -297,6 +398,7 @@ input[name="username"] {
         left: 0;
         right: 0;
         display: grid;
+        margin: 0;
     }
     .image-div {
         border: 2px solid black;
@@ -311,15 +413,15 @@ input[name="username"] {
     }
     .upload-by {
         position: absolute;
-        top: 71%;
+        top: 66%;
         left: 75%;
     }
     .comments {
-        top: 50%;
+        top: 60%;
         left: 10%;
         display: flex;
         position: absolute;
-        transform: translate(-40%, -80%);
+        transform: translate(-40%, -60%);
         flex-direction: column;
     }
     .comment-input {

@@ -10,26 +10,37 @@
                 url: null,
                 comment: null,
                 usernameComment: null,
-                comments: []
+                comments: [],
+                commentsofcomment: [],
+                nextId: null,
+                prevId: null
             };
         },
         mounted: function() {
             this.mounted();
+            this.fetchCommentsOfComment();
+            this.selectImage();
+
+            var vueInstance = this;
+            addEventListener("keydown", function(e) {
+                if (e.keyCode == 27) {
+                    vueInstance.closeModal();
+                }
+                if (e.keyCode == 37) {
+                    vueInstance.nextImage(vueInstance);
+                }
+                if (e.keyCode == 39) {
+                    vueInstance.previousImage(vueInstance);
+                }
+            });
         },
         watch: {
             id: function() {
-                console.log("we are in watch !");
-                console.log("this.id: ", this.id);
                 if (isNaN(this.id)) {
                     console.log("we are in if");
                     this.closeModal();
                 }
                 this.mounted();
-
-                // another problem we need to deal with is if the user try to go
-                // to an image that dosent exist
-                // we want to look at the response from the server, if the response
-                // is certain think close the model
             }
         },
         methods: {
@@ -42,12 +53,10 @@
                 axios
                     .get("/selectedimage/" + this.id)
                     .then(function(res) {
-                        console.log("results from selectedImage: ", res.data);
                         vueInstance.username = res.data.username;
                         vueInstance.title = res.data.title;
                         vueInstance.description = res.data.description;
                         vueInstance.url = res.data.url;
-                        console.log("res.data from mounted: ", res.data);
                         if (res.data == "") {
                             vueInstance.closeModal();
                         }
@@ -58,19 +67,63 @@
 
                 axios
                     .get("/comment/" + this.id)
-                    .then(function(results) {
-                        console.log(
-                            "resultsssss from axios GET comment: ",
-                            results.data
-                        );
+                    .then(results => {
                         vueInstance.comments = results.data;
-                        // for (var i = 0; i < results.data.length; i++) {
-                        //     vueInstance.comments.push(results.data[i]);
-                        // }
+                        this.fetchCommentsOfComment();
                     })
                     .catch(function(err) {
                         console.log("error from GET comment: ", err);
                     });
+                this.selectImage();
+            },
+            nextImage: function(next) {
+                if (next.nextId != null) {
+                    next.imageId = next.nextId;
+                    location.hash = "#" + next.imageId;
+                }
+            },
+            previousImage: function(prev) {
+                if (prev.prevId != null) {
+                    prev.imageId = prev.prevId;
+                    location.hash = "#" + prev.imageId;
+                }
+            },
+            selectImage: function() {
+                var vueInstance = this;
+                axios
+                    .get("/selectImage/" + vueInstance.id)
+                    .then(function(results) {
+                        vueInstance.nextId = results.data[0].nextID;
+                        vueInstance.prevId = results.data[0].previousID;
+                        // console.log("vueInstance.nextId: ", vueInstance.nextId);
+                        // console.log("vueInstance.prevId: ", vueInstance.prevId);
+                    })
+                    .catch(function(err) {
+                        console.log("error in selectImage: ", err);
+                    });
+            },
+            fetchCommentsOfComment: function() {
+                var vueInstance = this;
+                vueInstance.comments.forEach(comment => {
+                    axios
+                        .get("/getCommentsOfComment/" + comment.id)
+                        .then(results => {
+                            for (var i = 0; i < results.data.length; i++) {
+                                vueInstance.commentsofcomment[comment.id] =
+                                    results.data[i];
+                                comment.comments = results.data[i];
+                            }
+                        })
+                        .catch(err => {
+                            console.log(
+                                "error from getCommentsOfComment: ",
+                                err
+                            );
+                        });
+                });
+            },
+            getCommentsOfComment: function(id) {
+                return this.commentsofcomment[id];
             },
             closeModal: function() {
                 console.log("closeModal clicked worked");
@@ -92,6 +145,24 @@
                     })
                     .catch(function(err) {
                         console.log("error from POST /comment: ", err);
+                    });
+            },
+            addCommentOfComment: function(id, i) {
+                // var vueInstance = this;
+                axios
+                    .post("/commentofcomment", {
+                        comment_id: id,
+                        username: document.querySelector(`.username${i}`).value,
+                        comment: document.querySelector(`.comment${i}`).value
+                    })
+                    .then(function(results) {
+                        console.log(
+                            "results from addCommentOfComment: ",
+                            results
+                        );
+                    })
+                    .catch(function(err) {
+                        console.log("error from addCommentOfComment: ", err);
                     });
             },
             deletePictureAndComments: function(e) {
@@ -124,7 +195,8 @@
             description: "",
             username: "",
             file: null,
-            lastId: null
+            lastId: null,
+            comment2: null
         },
         created: function() {
             console.log("created");
@@ -134,11 +206,8 @@
             var vueInstance = this;
             addEventListener("hashchange", function() {
                 vueInstance.selectedImage = location.hash.slice(1);
-                console.log(
-                    "selectedimage from mounted: ",
-                    vueInstance.selectedImage
-                );
             });
+
             this.getSynths();
         },
         methods: {
@@ -152,7 +221,6 @@
                     .then(function(res) {
                         vueInstance.images = res.data;
                         vueInstance.lastId = res.data[res.data.length - 1].id;
-                        console.log("lastId: ", vueInstance.lastId);
                     })
                     .catch(function(err) {
                         console.log("error in axios get images: ", err);
@@ -160,7 +228,6 @@
             },
             handleClick: function(e) {
                 e.preventDefault();
-                console.log("this: ", this);
                 // we need to use FormData to send file to the server
                 var formData = new FormData();
                 formData.append("title", this.title);

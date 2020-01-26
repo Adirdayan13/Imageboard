@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
     <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Acme&display=swap" rel="stylesheet">
     <title>My Imageboard</title>
     <header>
         <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/synth.png" class="logo-header"></a></div>
@@ -45,7 +46,7 @@
                         <br>
                         <button @click="handleClick" class="submit-upload">Submit</button>
                         <br>
-                        <p style="color:red; text-decoration:underline; margin-top:5px;">{{toobig}}<p>
+                        <p class="too-big">{{toobig}}<p>
                     </div>
                 <!-- </div> -->
             </form>
@@ -72,8 +73,18 @@
             </div>
             <div class="image-clicked">
                 <img :src='url' class="picture-clicked">
+                <div id="arrows-container">
+                    <a v-if="nextId" :href="'#' + nextId">
+                        <img class="left-arrow" src="/arrow.png">
+                        <!-- left -->
+                    </a>
+                    <a v-if="prevId" :href="'#' + prevId">
+                        <img class="right-arrow" src="/arrow.png">
+                    </a>
+                </div>
                 <p class="upload-by">Uploaded by: {{username}}</p>
-                <button @click="deletePictureAndComments" style="margin-left:70%;">Delete picture</button>
+                <button @click="deletePictureAndComments" class="delete-button"><img src="delete.png" class="delete-image"></button>
+                <!-- <img src="delete.png" @click="deletePictureAndComments"> -->
             </div>
             <div class="comments">
                 <span>User name:</span>
@@ -83,19 +94,29 @@
                 <input type="text" v-model="comment" class="comment-input" name="comment" placeholder="Your comment">
                 <br>
                 <button @click="addComment()" class="submit-comment">Submit</button>
-                <!-- <button class='delete-button' @click="deletePictureAndComments"> Delete image </button> -->
-                <!-- <button>Comments</button> -->
-
                 <br>
             </div>
             <div class="comments-get" v-if="comments">
                 <span class="comments-title">Comments</span>
-                <p v-for="c in comments" class="username">
+                <br>
+                <template v-for="(c, i) in comments">
                     <span class="username">{{c.username}}:</span>
                     <span class="comment">{{c.comment}}</span>
-                    <!-- <span class="created-at">{{c.created_at}}</span> -->
-                </p>
-                <!-- <p v-for="c in comments">Comment: {{c.comment}}</p> -->
+                        <!-- <p> {{commentsofcomment}} </p><br> -->
+                    <p v-for="coc in c.comments">
+                        {{coc.comments}}
+                        {{commentsofcomment}}
+                        {{coc}}
+                        <span class="username">{{coc.username}}</span>
+                        <span class="comment">{{coc.comment}}</span>
+                    </p>
+                    <!-- <label>username:</label>
+                    <input type="text" :class="'username' + i" :name="'username' + i" placeholder="username">
+                    <label>comment:</label>
+                    <input type="text" :class="'comment' + i" :name="'comment' + i" placeholder="comment">
+                    <button @click="addCommentOfComment(c.id, i)" class="addCommentOfComment">Add comment of comment</button> -->
+                    <br>
+                </template>
             </div>
         </div>
     </script>

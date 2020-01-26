@@ -56,10 +56,23 @@ app.get("/images", function(req, res) {
         });
 });
 
+app.get("/selectImage/:id", function(req, res) {
+    let id = req.params.id;
+    db.selectImage(id)
+        .then(function(results) {
+            console.log("results from get selectImage: ", results);
+            res.json(results);
+        })
+        .catch(err => {
+            console.log("error in selectImage: ", err);
+        });
+});
+
 app.get("/comment/:id", function(req, res) {
     console.log("GET comment");
     console.log("req.params.id: ", req.params.id);
     let imageId = req.params.id;
+
     db.getComment(imageId)
         .then(function(results) {
             console.log("results from GET comment: ", results.rows);
@@ -88,6 +101,33 @@ app.post("/comment", function(req, res) {
         })
         .catch(function(err) {
             console.log("error in addComment POST /comment: ", err);
+        });
+});
+
+app.post("/commentofcomment", function(req, res) {
+    let comment_id = req.body.comment_id;
+    let username = req.body.username;
+    let comment = req.body.comment;
+    db.addCommentOfComment(comment_id, username, comment)
+        .then(function(results) {
+            console.log("results from comment of comment: ", results);
+            res.json(results);
+        })
+        .catch(function(err) {
+            console.log("error from add comment of comment: ", err);
+        });
+});
+
+app.get("/getCommentsOfComment/:id", function(req, res) {
+    let comment_id = req.params.id;
+    console.log("comment_id: ", comment_id);
+    db.getCommentsOfComment(comment_id)
+        .then(function(results) {
+            console.log("restuls from get comments of comments:", results);
+            res.json(results);
+        })
+        .catch(function(err) {
+            console.log("error in get comments of comments: ", err);
         });
 });
 
