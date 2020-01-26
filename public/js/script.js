@@ -37,7 +37,6 @@
         watch: {
             id: function() {
                 if (isNaN(this.id)) {
-                    console.log("we are in if");
                     this.closeModal();
                 }
                 this.mounted();
@@ -47,7 +46,6 @@
             mounted: function() {
                 var vueInstance = this;
                 if (isNaN(vueInstance.id)) {
-                    console.log("we are in if");
                     vueInstance.closeModal();
                 }
                 axios
@@ -95,8 +93,6 @@
                     .then(function(results) {
                         vueInstance.nextId = results.data[0].nextID;
                         vueInstance.prevId = results.data[0].previousID;
-                        // console.log("vueInstance.nextId: ", vueInstance.nextId);
-                        // console.log("vueInstance.prevId: ", vueInstance.prevId);
                     })
                     .catch(function(err) {
                         console.log("error in selectImage: ", err);
@@ -126,13 +122,10 @@
                 return this.commentsofcomment[id];
             },
             closeModal: function() {
-                console.log("closeModal clicked worked");
                 this.$emit("close", this.count);
             },
             addComment: function() {
                 var vueInstance = this;
-                console.log("comment !");
-                console.log("id: ", this.id);
                 axios
                     .post("/comment", {
                         id: this.id,
@@ -141,7 +134,6 @@
                     })
                     .then(function(results) {
                         vueInstance.comments.push(results.data);
-                        console.log("results from POST comment: ", results);
                     })
                     .catch(function(err) {
                         console.log("error from POST /comment: ", err);
@@ -168,11 +160,9 @@
             deletePictureAndComments: function(e) {
                 e.preventDefault();
                 var vueInstance = this;
-                console.log("we are in delete picture");
                 axios
                     .get("/delete/" + this.id)
                     .then(function(res) {
-                        console.log("res from delete :", res);
                         vueInstance.$emit("renderagain", vueInstance.id);
                         vueInstance.closeModal();
                     })
@@ -238,7 +228,6 @@
                 axios
                     .post("/upload", formData)
                     .then(function(res) {
-                        console.log("response from POST /upload: ", res);
                         vueInstance.images.unshift(res.data);
                     })
                     .catch(function(err) {
@@ -248,33 +237,22 @@
                     });
             },
             handleChange: function(e) {
-                console.log("handleChange is running");
-                console.log("file: ", e.target.files[0]);
                 this.file = e.target.files[0];
             },
-            closeMe: function(count) {
+            closeMe: function() {
                 this.selectedImage = null;
                 location.hash = "";
                 // history.replaceState(null, null, " ");
-                console.log("i need to close the modal", count);
-                console.log("this.selectedImage: ", this.selectedImage);
             },
             imageclick: function(id) {
                 this.selectedImage = id;
-                console.log("id: ", id);
-                console.log("this.selectedImage: ", this.selectedImage);
             },
             showmore: function(e) {
                 var vueInstance = this;
-                console.log("this.lastId: ", this.lastId);
                 e.preventDefault();
                 axios
                     .get("/nextImages/" + this.lastId)
                     .then(function(results) {
-                        console.log(
-                            "lastId: ",
-                            results.data[results.data.length - 1].id
-                        );
                         vueInstance.lastId =
                             results.data[results.data.length - 1].id;
                         for (var j = 0; j < results.data.length; j++) {

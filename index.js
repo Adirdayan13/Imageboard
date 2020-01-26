@@ -38,7 +38,6 @@ app.get("/nextImages/:id", function(req, res) {
     let imageId = req.params.id;
     db.getNextImages(imageId)
         .then(function(results) {
-            console.log("results from GET nextImages: ", results.rows);
             res.json(results.rows);
         })
         .catch(function(err) {
@@ -60,7 +59,6 @@ app.get("/selectImage/:id", function(req, res) {
     let id = req.params.id;
     db.selectImage(id)
         .then(function(results) {
-            console.log("results from get selectImage: ", results);
             res.json(results);
         })
         .catch(err => {
@@ -69,15 +67,9 @@ app.get("/selectImage/:id", function(req, res) {
 });
 
 app.get("/comment/:id", function(req, res) {
-    console.log("GET comment");
-    console.log("req.params.id: ", req.params.id);
     let imageId = req.params.id;
-
     db.getComment(imageId)
         .then(function(results) {
-            console.log("results from GET comment: ", results.rows);
-            console.log("req from GET comment: ", req.body);
-            // res.json(req.body.username, req.body.comment);
             res.json(results.rows);
         })
         .catch(function(err) {
@@ -89,14 +81,8 @@ app.post("/comment", function(req, res) {
     let userId = req.body.id;
     let username = req.body.username;
     let comment = req.body.comment;
-    console.log("POST comment");
-    console.log("req.body: ", req.body);
     db.addComment(userId, username, comment)
         .then(function(results) {
-            console.log(
-                "results from addComment POST /comment: ",
-                results.rows[0]
-            );
             res.json(results.rows[0]);
         })
         .catch(function(err) {
@@ -110,7 +96,6 @@ app.post("/commentofcomment", function(req, res) {
     let comment = req.body.comment;
     db.addCommentOfComment(comment_id, username, comment)
         .then(function(results) {
-            console.log("results from comment of comment: ", results);
             res.json(results);
         })
         .catch(function(err) {
@@ -120,10 +105,8 @@ app.post("/commentofcomment", function(req, res) {
 
 app.get("/getCommentsOfComment/:id", function(req, res) {
     let comment_id = req.params.id;
-    console.log("comment_id: ", comment_id);
     db.getCommentsOfComment(comment_id)
         .then(function(results) {
-            console.log("restuls from get comments of comments:", results);
             res.json(results);
         })
         .catch(function(err) {
@@ -132,7 +115,6 @@ app.get("/getCommentsOfComment/:id", function(req, res) {
 });
 
 app.get("/delete/:id", function(req, res) {
-    console.log("will be delete: ", req.params.id);
     Promise.all([
         db.deleteImage(req.params.id),
         db.deleteComments(req.params.id)
@@ -143,11 +125,8 @@ app.get("/delete/:id", function(req, res) {
 });
 
 app.get("/selectedimage/:id", function(req, res) {
-    console.log("req.body: ", req.params.id);
-    // console.log("GET selectedimage");
     db.getImage(req.params.id)
         .then(function(results) {
-            console.log("results from /selectedimage: ", results.rows[0]);
             res.json(results.rows[0]);
         })
         .catch(err => {
@@ -156,8 +135,6 @@ app.get("/selectedimage/:id", function(req, res) {
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
-    console.log("file :", req.file);
-    console.log("input: ", req.body);
     let username = req.body.username;
     let description = req.body.description;
     let title = req.body.title;
@@ -167,7 +144,6 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
         db.addImage(imageUrl, username, title, description)
             .then(function(results) {
                 res.json(results.rows[0]);
-                console.log("results from POST /upload: ", results.rows[0]);
             })
             .catch(function(err) {
                 console.log("error from POST upload :", err);
