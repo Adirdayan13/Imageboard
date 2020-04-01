@@ -1,42 +1,71 @@
 const aws = require("aws-sdk");
 const fs = require("fs");
+const sharp = require("sharp");
 
 let secrets;
+
 if (process.env.NODE_ENV == "production") {
-    secrets = process.env; // in prod the secrets are environment variables
+  secrets = process.env; // in prod the secrets are environment variables
 } else {
-    secrets = require("./secrets"); // in dev they are in secrets.json which is listed in .gitignore
+  secrets = require("./secrets"); // in dev they are in secrets.json which is listed in .gitignore
 }
 
 const s3 = new aws.S3({
-    accessKeyId: secrets.AWS_KEY,
-    secretAccessKey: secrets.AWS_SECRET
+  accessKeyId: secrets.AWS_KEY,
+  secretAccessKey: secrets.AWS_SECRET
 });
 
 exports.upload = (req, res, next) => {
-    if (!req.file) {
-        console.log("req.file is not there");
-        res.sendStatus(500);
-        return;
-    }
-    const { filename, mimetype, size, path } = req.file;
+  if (!req.file) {
+    console.log(`req.file ain't there`);
+    return res.sendStatus(500);
+  }
 
-    s3.putObject({
+  let contents = fs.readFileSync(`./uploads/${req.file.filename}`);
+
+  sharp(contents)
+    .rotate()
+    .resize(null, 2000)
+    .toFile(`./uploads/lol${req.file.filename}`)
+    .then(result => {
+      console.log("result: ", result);
+      const { filename, mimetype, path, size, originalname } = req.file;
+      ////////////////////////////////////////////////////////////////////
+      //COMPRESSED FILE
+      const compressedFilePath = __dirname + "/uploads/lol" + filename;
+      const compressedFileSize = result.size;
+
+      ////////////////////////////////////////////////////////////////////
+      //No compressor code
+      // s3.putObject({
+      //     Bucket: "fruitybucket",
+      //     ACL: "public-read",
+      //     Key: filename,
+      //     Body: fs.createReadStream(path),
+      //     ContentType: mimetype,
+      //     ContentLength: size
+      // })
+
+      s3.putObject({
         Bucket: "spicedling",
         ACL: "public-read",
-        Key: filename,
-        Body: fs.createReadStream(path),
+        Key: "lol" + filename,
+        Body: fs.createReadStream(compressedFilePath),
         ContentType: mimetype,
-        ContentLength: size
-    })
+        ContentLength: compressedFileSize
+      })
         .promise()
         .then(() => {
-            console.log("it worked");
-            next();
-            fs.unlink(path, () => {});
+          next();
+          fs.unlink(path, () => {});
+          fs.unlink(`./uploads/lol${req.file.filename}`, () => {});
         })
         .catch(err => {
-            console.log("error in putObject: ", err);
-            res.sendStatus(500);
+          console.log(err, "failure :(");
+          res.sendStatus(500);
         });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };

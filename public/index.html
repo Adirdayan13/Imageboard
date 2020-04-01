@@ -3,12 +3,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+    <link rel="shortcut icon" type="image/png" href="/icon.png"/>
     <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Acme&display=swap" rel="stylesheet">
     <title>My Imageboard</title>
     <header>
-        <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/synth.png" class="logo-header"></a></div>
+        <div><a href="https://github.com/Adirdayan13" target="_blank"><img src="/camera.png" class="logo-header"></a></div>
     </header>
 </head>
 <body>
@@ -36,17 +36,20 @@
             <form>
                 <!-- <div> -->
                     <div>
-                        <input v-model='title' type="text" name="title" placeholder="Title">
-                        <input v-model='description' type="text" name="description" placeholder="Description">
-                        <input v-model='username' type="text" name="username" placeholder="User name">
+                        <input v-model='title' type="text" name="title" class ="title-input" placeholder="Title">
+                        <input v-model='description' type="text" name="description" class="description-input" placeholder="Description">
+                        <input v-model='username' type="text" name="username" class="username-input" placeholder="User name">
                     </div>
                     <br>
+                    <img class="loading displaynone" src="loading.gif">
                     <div>
-                        <input @change="handleChange" type="file" name="file" accept="image/*">
+                        <div class="file-and-submit">
+                            <input @change="handleChange" type="file" name="file" class="file" accept="image/*">
+                            <br>
+                            <button @click="handleClick" class="submit-upload">Submit</button>
+                        </div>
                         <br>
-                        <button @click="handleClick" class="submit-upload">Submit</button>
-                        <br>
-                        <p class="too-big">{{toobig}}<p>
+                        <p class="too-big">{{toobig}}</p>
                     </div>
                 <!-- </div> -->
             </form>
@@ -60,7 +63,9 @@
             </div>
         </div>
         <!-- <first-component></first-component> -->
-        <button id="showmore" @click="showmore">Show more</button>
+        <div class="showmore-btn">
+            <button id="showmore" class="displaynone" @click="showmore">Show more</button>
+        </div>
     </div>
 
     <script type="text/x-template" id="template">
@@ -102,19 +107,6 @@
                 <template v-for="(c, i) in comments">
                     <span class="username">{{c.username}}:</span>
                     <span class="comment">{{c.comment}}</span>
-                        <!-- <p> {{commentsofcomment}} </p><br> -->
-                    <p v-for="coc in c.comments">
-                        {{coc.comments}}
-                        {{commentsofcomment}}
-                        {{coc}}
-                        <span class="username">{{coc.username}}</span>
-                        <span class="comment">{{coc.comment}}</span>
-                    </p>
-                    <!-- <label>username:</label>
-                    <input type="text" :class="'username' + i" :name="'username' + i" placeholder="username">
-                    <label>comment:</label>
-                    <input type="text" :class="'comment' + i" :name="'comment' + i" placeholder="comment">
-                    <button @click="addCommentOfComment(c.id, i)" class="addCommentOfComment">Add comment of comment</button> -->
                     <br>
                 </template>
             </div>

@@ -4,14 +4,10 @@ const db = require("./db");
 const s3 = require("./s3");
 const { s3Url } = require("./config");
 
-app.use(express.static("./public"));
-
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 const path = require("path");
 
-//////// BOILERPLATE mode for image upload //////
-/////// DO NOT TOUCH //////
 const diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
         callback(null, __dirname + "/uploads");
@@ -30,9 +26,9 @@ const uploader = multer({
         fileSize: 2097152
     }
 });
-/////////// DO NOT TOUCH ///////////
 
 app.use(express.json());
+app.use(express.static("./public"));
 
 app.get("/nextImages/:id", function(req, res) {
     let imageId = req.params.id;
@@ -138,8 +134,7 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
     let username = req.body.username;
     let description = req.body.description;
     let title = req.body.title;
-    //insert a new row into the db for the images
-    const imageUrl = s3Url + req.file.filename;
+    const imageUrl = s3Url + "lol" + req.file.filename;
     if (req.file) {
         db.addImage(imageUrl, username, title, description)
             .then(function(results) {

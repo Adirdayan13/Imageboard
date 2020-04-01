@@ -11,14 +11,12 @@
                 comment: null,
                 usernameComment: null,
                 comments: [],
-                commentsofcomment: [],
                 nextId: null,
                 prevId: null
             };
         },
         mounted: function() {
             this.mounted();
-            this.fetchCommentsOfComment();
             this.selectImage();
 
             var vueInstance = this;
@@ -67,7 +65,6 @@
                     .get("/comment/" + this.id)
                     .then(results => {
                         vueInstance.comments = results.data;
-                        this.fetchCommentsOfComment();
                     })
                     .catch(function(err) {
                         console.log("error from GET comment: ", err);
@@ -98,29 +95,6 @@
                         console.log("error in selectImage: ", err);
                     });
             },
-            fetchCommentsOfComment: function() {
-                var vueInstance = this;
-                vueInstance.comments.forEach(comment => {
-                    axios
-                        .get("/getCommentsOfComment/" + comment.id)
-                        .then(results => {
-                            for (var i = 0; i < results.data.length; i++) {
-                                vueInstance.commentsofcomment[comment.id] =
-                                    results.data[i];
-                                comment.comments = results.data[i];
-                            }
-                        })
-                        .catch(err => {
-                            console.log(
-                                "error from getCommentsOfComment: ",
-                                err
-                            );
-                        });
-                });
-            },
-            getCommentsOfComment: function(id) {
-                return this.commentsofcomment[id];
-            },
             closeModal: function() {
                 this.$emit("close", this.count);
             },
@@ -139,30 +113,12 @@
                         console.log("error from POST /comment: ", err);
                     });
             },
-            addCommentOfComment: function(id, i) {
-                // var vueInstance = this;
-                axios
-                    .post("/commentofcomment", {
-                        comment_id: id,
-                        username: document.querySelector(`.username${i}`).value,
-                        comment: document.querySelector(`.comment${i}`).value
-                    })
-                    .then(function(results) {
-                        console.log(
-                            "results from addCommentOfComment: ",
-                            results
-                        );
-                    })
-                    .catch(function(err) {
-                        console.log("error from addCommentOfComment: ", err);
-                    });
-            },
             deletePictureAndComments: function(e) {
                 e.preventDefault();
                 var vueInstance = this;
                 axios
                     .get("/delete/" + this.id)
-                    .then(function(res) {
+                    .then(function() {
                         vueInstance.$emit("renderagain", vueInstance.id);
                         vueInstance.closeModal();
                     })
@@ -177,8 +133,8 @@
         el: "#main",
         data: {
             selectedImage: location.hash.slice(1),
-            heading: "Synthagram",
-            latest: "Share your favourite synth picture",
+            heading: "Imageboard",
+            latest: "Share your favourite pictures",
             toobig: null,
             images: null,
             title: "",
@@ -198,17 +154,22 @@
                 vueInstance.selectedImage = location.hash.slice(1);
             });
 
-            this.getSynths();
+            this.getPictures();
         },
         methods: {
             refresh: function() {
-                this.getSynths();
+                this.getPictures();
             },
-            getSynths: function() {
+            getPictures: function() {
                 var vueInstance = this;
                 axios
                     .get("/images")
                     .then(function(res) {
+                        if (res.data.length >= 10) {
+                            document
+                                .getElementById("showmore")
+                                .classList.remove("displaynone");
+                        }
                         vueInstance.images = res.data;
                         vueInstance.lastId = res.data[res.data.length - 1].id;
                     })
@@ -219,6 +180,12 @@
             handleClick: function(e) {
                 e.preventDefault();
                 // we need to use FormData to send file to the server
+                const fileAndInput = document.querySelector(".file-and-submit");
+                const loading = document.querySelector(".loading");
+                const tooBig = document.querySelector(".too-big");
+                tooBig.classList.add("displaynone");
+                fileAndInput.classList.add("displaynone");
+                loading.classList.remove("displaynone");
                 var formData = new FormData();
                 formData.append("title", this.title);
                 formData.append("description", this.description);
@@ -228,12 +195,18 @@
                 axios
                     .post("/upload", formData)
                     .then(function(res) {
+                        document.querySelector(".file").value = "";
                         vueInstance.images.unshift(res.data);
+                        fileAndInput.classList.remove("displaynone");
+                        loading.classList.add("displaynone");
                     })
                     .catch(function(err) {
                         console.log("error in POST /upload: ", err);
                         vueInstance.toobig =
-                            "File is too big max upload size is 2MB";
+                            "File is too big max upload size is 5MB";
+                        fileAndInput.classList.remove("displaynone");
+                        tooBig.classList.remove("displaynone");
+                        loading.classList.add("displaynone");
                     });
             },
             handleChange: function(e) {
@@ -262,7 +235,7 @@
                             ) {
                                 document
                                     .getElementById("showmore")
-                                    .classList.add("hidden");
+                                    .classList.add("displaynone");
                             }
                         }
                     })
